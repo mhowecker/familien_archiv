@@ -54,7 +54,8 @@ CREATE TABLE partnerschaft(
 	von DATE,
 	bis DATE,
 	PRIMARY KEY (nummer, person1, person2),
-	FOREIGN KEY (person1, person2) REFERENCES personen(id)
+	FOREIGN KEY (person1) REFERENCES personen(id),
+	FOREIGN KEY (person2) REFERENCES personen(id)
 );
 
 CREATE TABLE benutzer(
