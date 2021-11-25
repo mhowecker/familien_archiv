@@ -1,6 +1,5 @@
 DROP DATABASE IF EXISTS famarch;
 CREATE DATABASE famarch;
-use famarch;
 
 CREATE TABLE personen(
 	id SERIAL,
@@ -26,32 +25,32 @@ CREATE TABLE personen(
 );
 
 CREATE TABLE biographien(
-	titel VARCHAR,
 	nummer SERIAL,
+	titel VARCHAR,
 	kategorie VARCHAR,
 	dokument VARCHAR,
 	person INTEGER,
-	PRIMARY KEY (person),
+	PRIMARY KEY (nummer, person),
 	FOREIGN KEY (person) REFERENCES personen(id)
 );
 
 CREATE TABLE objekte(
 	nummer SERIAL,
+	person INTEGER,
 	titel VARCHAR,
 	kategorie VARCHAR,
 	ablageort VARCHAR,
-	person INTEGER,
-	PRIMARY KEY (person, nummer),
+	PRIMARY KEY (nummer, person),
 	FOREIGN KEY (person) REFERENCES personen(id)
 );
 
 CREATE TABLE partnerschaft(
 	nummer SERIAL,
-	von DATE,
-	bis DATE,
 	person1 INTEGER,
 	person2 INTEGER,
-	PRIMARY KEY (person1, person2, nummer)
+	von DATE,
+	bis DATE,
+	PRIMARY KEY (nummer, person1, person2)
 	FOREIGN KEY (person1) REFERENCES personen(id),
 	FOREIGN KEY (person2) REFERENCES personen(id)
 );
