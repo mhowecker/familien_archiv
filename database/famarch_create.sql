@@ -4,32 +4,32 @@ use famarch;
 
 CREATE TABLE personen(
 	id SERIAL,
-	vorname VARCHAR(),
-	nachname VARCHAR(),
-	maedchenname VARCHAR(),
-	rufname VARCHAR(),
-	zusaetzliche_profeessionelle_tärigkeit VARCHAR(),
+	vorname VARCHAR,
+	nachname VARCHAR,
+	maedchenname VARCHAR,
+	rufname VARCHAR,
+	zusaetzliche_profeessionelle_tärigkeit VARCHAR,
 	geboren_am DATE,
 	begräbnis_am DATE,
-	mutter VARCHAR(),
-	vater VARCHAR(),
-	titel VARCHAR(),
-	identifizierung VARCHAR(),
-	todesursache VARCHAR(),
-	beruf VARCHAR(),
-	ausbildung VARCHAR(),
-	trauung_am VARCHAR(),
-	verstorben_am VARCHAR(),
-	konfession VARCHAR(),
-	geschlecht VARCHAR(),
+	mutter VARCHAR,
+	vater VARCHAR,
+	titel VARCHAR,
+	identifizierung VARCHAR,
+	todesursache VARCHAR,
+	beruf VARCHAR,
+	ausbildung VARCHAR,
+	trauung_am VARCHAR,
+	verstorben_am VARCHAR,
+	konfession VARCHAR,
+	geschlecht VARCHAR,
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE biographien(
-	titel VARCHAR(),
+	titel VARCHAR,
 	nummer SERIAL,
-	kategorie VARCHAR(),
-	dokument VARCHAR(),
+	kategorie VARCHAR,
+	dokument VARCHAR,
 	person INTEGER,
 	PRIMARY KEY (person),
 	FOREIGN KEY (person) REFERENCES personen(id)
@@ -37,9 +37,9 @@ CREATE TABLE biographien(
 
 CREATE TABLE objekte(
 	nummer SERIAL,
-	titel VARCHAR(),
-	kategorie VARCHAR(),
-	ablageort VARCHAR(),
+	titel VARCHAR,
+	kategorie VARCHAR,
+	ablageort VARCHAR,
 	person INTEGER,
 	PRIMARY KEY (person, nummer),
 	FOREIGN KEY (person) REFERENCES personen(id)
@@ -57,8 +57,8 @@ CREATE TABLE partnerschaft(
 );
 
 CREATE TABLE benutzer(
-	name VARCHAR(),
-	berechtigung VARCHAR(),
-	passwort VARCHAR(),
+	name VARCHAR,
+	berechtigung VARCHAR,
+	passwort VARCHAR,
 	PRIMARY KEY (name)
 );
