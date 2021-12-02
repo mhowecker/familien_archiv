@@ -20,8 +20,8 @@ CREATE TABLE personen(
 	todesursache VARCHAR,
 	beruf VARCHAR,
 	ausbildung VARCHAR,
-	trauung_am VARCHAR,
-	verstorben_am VARCHAR,
+	trauung_am DATE,
+	verstorben_am DATE,
 	konfession VARCHAR,
 	geschlecht VARCHAR,
 	PRIMARY KEY (id)
