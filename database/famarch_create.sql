@@ -1,6 +1,8 @@
-DROP DATABASE IF EXISTS famarch;
-CREATE DATABASE famarch;
-use famarch;
+DROP TABLE IF EXISTS benutzer CASCADE;
+DROP TABLE IF EXISTS objekte CASCADE;
+DROP TABLE IF EXISTS biographien CASCADE;
+DROP TABLE IF EXISTS personen CASCADE;
+
 
 CREATE TABLE personen(
 	id SERIAL,
@@ -18,40 +20,40 @@ CREATE TABLE personen(
 	todesursache VARCHAR,
 	beruf VARCHAR,
 	ausbildung VARCHAR,
-	trauung_am DATE,
-	verstorben_am DATE,
-	konfession DATE,
+	trauung_am VARCHAR,
+	verstorben_am VARCHAR,
+	konfession VARCHAR,
 	geschlecht VARCHAR,
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE biographien(
-	titel VARCHAR,
 	nummer SERIAL,
+	titel VARCHAR,
 	kategorie VARCHAR,
 	dokument VARCHAR,
 	person INTEGER,
-	PRIMARY KEY (person),
+	PRIMARY KEY (nummer, person),
 	FOREIGN KEY (person) REFERENCES personen(id)
 );
 
 CREATE TABLE objekte(
 	nummer SERIAL,
+	person INTEGER,
 	titel VARCHAR,
 	kategorie VARCHAR,
 	ablageort VARCHAR,
-	person INTEGER,
-	PRIMARY KEY (person, nummer),
+	PRIMARY KEY (nummer, person),
 	FOREIGN KEY (person) REFERENCES personen(id)
 );
 
 CREATE TABLE partnerschaft(
 	nummer SERIAL,
-	von DATE,
-	bis DATE,
 	person1 INTEGER,
 	person2 INTEGER,
-	PRIMARY KEY (person1, person2, nummer)
+	von DATE,
+	bis DATE,
+	PRIMARY KEY (nummer, person1, person2),
 	FOREIGN KEY (person1) REFERENCES personen(id),
 	FOREIGN KEY (person2) REFERENCES personen(id)
 );
