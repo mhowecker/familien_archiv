@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS benutzer CASCADE;
-DROP TABLE IF EXISTS partnerschaft CASCADE;
+DROP TABLE IF EXISTS partnerschaften CASCADE;
 DROP TABLE IF EXISTS objekte CASCADE;
 DROP TABLE IF EXISTS biographien CASCADE;
 DROP TABLE IF EXISTS personen CASCADE;
@@ -48,7 +48,7 @@ CREATE TABLE objekte(
 	FOREIGN KEY (person) REFERENCES personen(id)
 );
 
-CREATE TABLE partnerschaft(
+CREATE TABLE partnerschaften(
 	nummer SERIAL,
 	person1 INTEGER,
 	person2 INTEGER,
