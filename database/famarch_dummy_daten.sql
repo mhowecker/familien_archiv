@@ -25,10 +25,10 @@ VALUES ('titel2', 'kategorie2', 'ablageort2', 2);
 
 
 
-INSERT INTO partnerschaft (von, bis, person1, person2)
+INSERT INTO partnerschaften (von, bis, person1, person2)
 VALUES ('2021-12-12', '2021-12-13', 1, 2);
 
-INSERT INTO partnerschaft (von, bis, person1, person2)
+INSERT INTO partnerschaften (von, bis, person1, person2)
 VALUES ('2021-12-12', '2021-12-13', 2, 3);
 
 
