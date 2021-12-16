@@ -9,7 +9,7 @@ CREATE TABLE personen(
 	id SERIAL,
 	vorname VARCHAR,
 	nachname VARCHAR,
-	m0xE4dchenname VARCHAR,
+	mächenname VARCHAR,
 	rufname VARCHAR,
 	zusätzliche_professionelle_tätigkeit VARCHAR,
 	geboren_am DATE,
