@@ -21,7 +21,6 @@ CREATE TABLE personen(
 	todesursache VARCHAR,
 	beruf VARCHAR,
 	ausbildung VARCHAR,
-	trauung_am DATE,
 	verstorben_am DATE,
 	konfession VARCHAR,
 	geschlecht VARCHAR,
