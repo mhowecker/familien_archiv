@@ -21,19 +21,9 @@ public class ArchivController {
         return service.getOverview();
     }
 
-    @RequestMapping(value="/data/filter/vorname/{vorname}", method=RequestMethod.GET)
-    public PersonDataShort getFilteredOverviewBoth(@PathVariable(value="vorname") String vorname) {
-        return service.getFilteredOverview(vorname, "");
-    }
-
-    @RequestMapping(value="/data/filter/nachname/{nachname}", method=RequestMethod.GET)
-    public PersonDataShort getFilteredOverview(@PathVariable(value="nachname") String nachname) {
-        return service.getFilteredOverview("", nachname);
-    }
-
-    @RequestMapping(value="/data/filter/both/{vorname}/{nachname}", method=RequestMethod.GET)
-    public PersonDataShort getFilteredOverview(@PathVariable(value="vorname") String vorname, @PathVariable(value="nachname") String nachname) {
-        return service.getFilteredOverview(vorname, nachname);
+    @RequestMapping(value="/data/filter/{filter}", method=RequestMethod.GET)
+    public PersonDataShort getFilteredOverviewBoth(@PathVariable(value="filter") String filter) {
+        return service.getFilteredOverview(filter);
     }
 
     @RequestMapping(value="/data/detail/{id}", method=RequestMethod.GET)

@@ -42,8 +42,6 @@ public class Person {
 	String beruf;
 	@Column(name="ausbildung")
 	String ausbildung;
-	@Column(name="trauung_am")
-	Date traunung_am;
 	@Column(name="verstorben_am")
 	Date verstorben_am;
 	@Column(name="konfession")
@@ -52,9 +50,9 @@ public class Person {
 	String geschlecht;
 
 	public Person(int id, String vorname, String nachname, String maedchenname, String rufname,
-			String zusaetzliche_professionelle_taetigkeit, Date geboren_am, Date begraebnis_am, String mutter,
-			String vater, String titel, String identifizierung, String todesursache, String beruf, String ausbildung,
-			Date traunung_am, Date verstorben_am, String konfession, String geschlecht) {
+					String zusaetzliche_professionelle_taetigkeit, Date geboren_am, Date begraebnis_am, String mutter,
+					String vater, String titel, String identifizierung, String todesursache, String beruf, String ausbildung,
+				  Date verstorben_am, String konfession, String geschlecht) {
 		super();
 		this.id = id;
 		this.vorname = vorname;
@@ -71,7 +69,6 @@ public class Person {
 		this.todesursache = todesursache;
 		this.beruf = beruf;
 		this.ausbildung = ausbildung;
-		this.traunung_am = traunung_am;
 		this.verstorben_am = verstorben_am;
 		this.konfession = konfession;
 		this.geschlecht = geschlecht;
@@ -199,14 +196,6 @@ public class Person {
 
 	public void setAusbildung(String ausbildung) {
 		this.ausbildung = ausbildung;
-	}
-
-	public Date getTraunung_am() {
-		return traunung_am;
-	}
-
-	public void setTraunung_am(Date traunung_am) {
-		this.traunung_am = traunung_am;
 	}
 
 	public Date getVerstorben_am() {

@@ -19,8 +19,8 @@ public class ArchivService {
         return this.connector.allPersonHandler();
     }
 
-    public PersonDataShort getFilteredOverview(String vorname, String nachname) {
-        return this.connector.filteredPersonHandler(vorname, nachname);
+    public PersonDataShort getFilteredOverview(String filter) {
+        return this.connector.filteredPersonHandler(filter);
     }
 
     public PersonLong getPersonLong(String id) {

@@ -1,8 +1,10 @@
 package famarch.web.service;
 
-import famarch.web.dbdata.Benutzer;
-import famarch.web.dbdata.Person;
-import famarch.web.webdata.*;
+import famarch.web.dbdata.*;
+import famarch.web.webdata.BenutzerData;
+import famarch.web.webdata.PersonDataShort;
+import famarch.web.webdata.PersonLong;
+import famarch.web.webdata.PersonShort;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -72,11 +74,11 @@ public class ArchivConnector {
         return pds;
     }
 
-    public PersonDataShort filteredPersonHandler(String vorname, String nachname) {
+    public PersonDataShort filteredPersonHandler(String filter) {
         PersonDataShort pds = null;
         try (Session session = this.setupDB()) {
             session.beginTransaction();
-            String query = "from Person where vorname like '%" + vorname + "%' and nachname like '%" + nachname + "'";
+            String query = "from Person where vorname like '%" + filter + "%' or nachname like '%" + filter + "'";
             List result = session.createQuery(query).list();
             pds = ArchivConnector.convertPDS(result);
             session.getTransaction().commit();
@@ -108,19 +110,52 @@ public class ArchivConnector {
             session.beginTransaction();
             String query = "from Person where id=" + id;
             List result = session.createQuery(query).list();
-            pl = mapPersonPersonLonng(result);
+            pl = mapPersonPersonLong(result);
 
-            //Bios, Objekte und Partnerschafte fehlen noch
+            query = "from Biographie where person=" + pl.getId();
+            result = session.createQuery(query).list();
+            for (Biographie bio : (List<Biographie>) result) {
+                pl.addBiographie(bio);
+            }
+
+            query = "from Objekt where person=" + pl.getId();
+            result = session.createQuery(query).list();
+            for (Objekt o : (List<Objekt>) result) {
+                pl.addObjekt(o);
+            }
+
+            query = "from Partnerschaft where person1=" + pl.getId() + " or person2=" + pl.getId();
+            result = session.createQuery(query).list();
+            for (Partnerschaft ps : (List<Partnerschaft>) result) {
+                pl.addPartnerschaft(ps);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return pl;
     }
 
-    private static PersonLong mapPersonPersonLonng(List<Person> result) {
+    private static PersonLong mapPersonPersonLong(List<Person> result) {
         PersonLong pl = new PersonLong();
         for (Person p : result) {
-            //Umwandlung noch nicht fertig
+            pl.setId(p.getId());
+            pl.setVorname(p.getVorname());
+            pl.setNachname(p.getNachname());
+            pl.setMaedchenname(p.getMaedchenname());
+            pl.setRufname(p.getRufname());
+            pl.setZusaetzliche_professionelle_taetigkeit(p.getZusaetzliche_professionelle_taetigkeit());
+            pl.setGeboren_am(p.getGeboren_am());
+            pl.setBegraebnis_am(p.getBegraebnis_am());
+            pl.setMutter(p.getMutter());
+            pl.setVater(p.getVater());
+            pl.setTitel(p.getTitel());
+            pl.setIdentifizierung(p.getIdentifizierung());
+            pl.setTodesursache(p.getTodesursache());
+            pl.setBeruf(p.getBeruf());
+            pl.setAusbildung(p.getAusbildung());
+            pl.setVerstorben_am(p.getVerstorben_am());
+            pl.setKonfession(p.getKonfession());
+            pl.setGeschlecht(p.getGeschlecht());
             break;
         }
         return pl;
