@@ -222,4 +222,8 @@ public class Person {
 		this.geschlecht = geschlecht;
 	}
 
+	public boolean equals(Person person) {
+		return this.id == person.id;
+	}
+
 }

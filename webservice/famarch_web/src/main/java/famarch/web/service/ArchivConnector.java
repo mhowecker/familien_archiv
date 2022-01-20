@@ -10,7 +10,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
 
+import java.text.NumberFormat;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ArchivConnector {
@@ -49,6 +52,7 @@ public class ArchivConnector {
 
                 users.addUser(b);
             }
+
             session.getTransaction().commit();
             session.close();
         } catch (Exception e) {
@@ -65,6 +69,7 @@ public class ArchivConnector {
             String query = "from Person";
             List result = session.createQuery(query).list();
             pds = ArchivConnector.convertPDS(result);
+
             session.getTransaction().commit();
             session.close();
         } catch (Exception e) {
@@ -81,6 +86,7 @@ public class ArchivConnector {
             String query = "from Person where vorname like '%" + filter + "%' or nachname like '%" + filter + "'";
             List result = session.createQuery(query).list();
             pds = ArchivConnector.convertPDS(result);
+
             session.getTransaction().commit();
             session.close();
         } catch (Exception e) {
@@ -105,12 +111,15 @@ public class ArchivConnector {
     }
 
     public PersonLong getPersonLong(String id) {
-        PersonLong pl = null;
+        PersonLong pl = new PersonLong();
         try (Session session = this.setupDB()) {
             session.beginTransaction();
             String query = "from Person where id=" + id;
             List result = session.createQuery(query).list();
-            pl = mapPersonPersonLong(result);
+            for (Person p : (List<Person>) result) {
+                mapPersonPersonLong(p, pl);
+                break;
+            }
 
             query = "from Biographie where person=" + pl.getId();
             result = session.createQuery(query).list();
@@ -129,35 +138,221 @@ public class ArchivConnector {
             for (Partnerschaft ps : (List<Partnerschaft>) result) {
                 pl.addPartnerschaft(ps);
             }
+
+            session.getTransaction().commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return pl;
     }
 
-    private static PersonLong mapPersonPersonLong(List<Person> result) {
-        PersonLong pl = new PersonLong();
-        for (Person p : result) {
-            pl.setId(p.getId());
-            pl.setVorname(p.getVorname());
-            pl.setNachname(p.getNachname());
-            pl.setMaedchenname(p.getMaedchenname());
-            pl.setRufname(p.getRufname());
-            pl.setZusaetzliche_professionelle_taetigkeit(p.getZusaetzliche_professionelle_taetigkeit());
-            pl.setGeboren_am(p.getGeboren_am());
-            pl.setBegraebnis_am(p.getBegraebnis_am());
-            pl.setMutter(p.getMutter());
-            pl.setVater(p.getVater());
-            pl.setTitel(p.getTitel());
-            pl.setIdentifizierung(p.getIdentifizierung());
-            pl.setTodesursache(p.getTodesursache());
-            pl.setBeruf(p.getBeruf());
-            pl.setAusbildung(p.getAusbildung());
-            pl.setVerstorben_am(p.getVerstorben_am());
-            pl.setKonfession(p.getKonfession());
-            pl.setGeschlecht(p.getGeschlecht());
-            break;
+    private static void mapPersonPersonLong(Person person_from, Person person_to) {
+        person_to.setId(person_from.getId());
+        person_to.setVorname(person_from.getVorname());
+        person_to.setNachname(person_from.getNachname());
+        person_to.setMaedchenname(person_from.getMaedchenname());
+        person_to.setRufname(person_from.getRufname());
+        person_to.setZusaetzliche_professionelle_taetigkeit(person_from.getZusaetzliche_professionelle_taetigkeit());
+        person_to.setGeboren_am(person_from.getGeboren_am());
+        person_to.setBegraebnis_am(person_from.getBegraebnis_am());
+        person_to.setMutter(person_from.getMutter());
+        person_to.setVater(person_from.getVater());
+        person_to.setTitel(person_from.getTitel());
+        person_to.setIdentifizierung(person_from.getIdentifizierung());
+        person_to.setTodesursache(person_from.getTodesursache());
+        person_to.setBeruf(person_from.getBeruf());
+        person_to.setAusbildung(person_from.getAusbildung());
+        person_to.setVerstorben_am(person_from.getVerstorben_am());
+        person_to.setKonfession(person_from.getKonfession());
+        person_to.setGeschlecht(person_from.getGeschlecht());
+    }
+
+    public boolean updatePerson(PersonLong person_neu) {
+
+        Person person = new Person();
+        mapPersonPersonLong(person_neu, person);
+
+        List<Biographie> biographien = person_neu.getBiographien();
+        List<Objekt> objekte = person_neu.getObjekte();
+        List<Partnerschaft> partnerschaften = person_neu.getPartnerschaften();
+
+        try (Session session = this.setupDB()) {
+            session.beginTransaction();
+
+            session.update(person);
+
+            this.saveOrUpdateBio(biographien, session);
+            this.saveOrUpdateObj(objekte, session);
+            this.saveOrUpdatePart(partnerschaften, session);
+
+            session.getTransaction().commit();
+            session.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        return pl;
+
+        return true;
+    }
+
+    public boolean insertPerson(PersonLong person_neu) {
+
+        Person person = new Person();
+        mapPersonPersonLong(person_neu, person);
+
+        List<Biographie> biographien = person_neu.getBiographien();
+        List<Objekt> objekte = person_neu.getObjekte();
+        List<Partnerschaft> partnerschaften = person_neu.getPartnerschaften();
+
+        try (Session session = this.setupDB()) {
+            session.beginTransaction();
+
+            session.saveOrUpdate(person);
+
+            this.saveOrUpdateBio(biographien, session);
+            this.saveOrUpdateObj(objekte, session);
+            this.saveOrUpdatePart(partnerschaften, session);
+
+            session.getTransaction().commit();
+            session.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void saveOrUpdateBio(List<Biographie> bio, Session session) {
+        if (bio == null) return;
+        for (Biographie b : bio) {
+            session.saveOrUpdate(b);
+        }
+    }
+
+    private void saveOrUpdateObj(List<Objekt> obj, Session session) {
+        if (obj == null) return;
+        for (Objekt o : obj) {
+            session.saveOrUpdate(o);
+        }
+    }
+
+    private void saveOrUpdatePart(List<Partnerschaft> part, Session session) {
+        if (part == null) return;
+        for (Partnerschaft p : part) {
+            int personid1 = p.getPerson1();
+            int personid2 = p.getPerson2();
+            Query query = session.createQuery("from Person where id=:id");
+            query.setParameter("id", personid1);
+            List result = query.list();
+            if (result.size() == 0) {
+                Person person1 = new Person();
+                person1.setId(personid1);
+                session.save(person1);
+                session.getTransaction().commit();
+                session.getTransaction().begin();
+            }
+            query = session.createQuery("from Person where id=:id");
+            query.setParameter("id", personid2);
+            result = query.list();
+            if (result.size() == 0) {
+                Person person2 = new Person();
+                person2.setId(personid2);
+                session.save(person2);
+                session.getTransaction().commit();
+                session.getTransaction().begin();
+            }
+            session.saveOrUpdate(p);
+        }
+    }
+
+    public boolean deletePerson(String id) {
+        try (Session session = this.setupDB()) {
+            Person person = new Person();
+            person.setId(Integer.parseInt(id));
+            session.getTransaction().begin();
+
+            Query query = session.createQuery("delete from Biographie where person=:id");
+            query.setParameter("id", person.getId());
+            query.executeUpdate();
+
+            query = session.createQuery("delete from Objekt where person=:id");
+            query.setParameter("id", person.getId());
+            query.executeUpdate();
+
+            query = session.createQuery("from Partnerschaft where person1=:id or person2=:id");
+            query.setParameter("id", person.getId());
+            List result1 = query.list();
+            for (Partnerschaft part : (List<Partnerschaft>) result1) {
+                query = session.createQuery("from Person where id=:id");
+                query.setParameter("id", part.getPerson1());
+                List result2 = query.list();
+                Person p1 = (Person) result2.get(0);
+
+                query.setParameter("id", part.getPerson2());
+                result2 = query.list();
+                Person p2 = (Person) result2.get(0);
+
+                if (p1.getId() == person.getId() && p2.getVorname() == null ||
+                    p2.getId() == person.getId() && p1.getVorname() == null) {
+                    session.delete(part);
+                }
+
+                session.getTransaction().commit();
+                session.getTransaction().begin();
+
+                if (p1.getId() != person.getId()) {
+                    query = session.createQuery("from Partnerschaft where id=:id");
+                    query.setParameter("id", p1.getId());
+                    result2 = query.list();
+                    if (result2.size() == 0) {
+                        session.remove(p1);
+                    }
+                }
+                if (p2.getId() != person.getId()) {
+                    query = session.createQuery("from Partnerschaft where id=:id");
+                    query.setParameter("id", p2.getId());
+                    result2 = query.list();
+                    if (result2.size() == 0) {
+                        session.remove(p2);
+                    }
+                }
+
+                session.getTransaction().commit();
+                session.getTransaction().begin();
+            }
+
+            query = session.createQuery("from Partnerschaft where person1=:id or person2=:id");
+            query.setParameter("id", person.getId());
+            result1 = query.list();
+            if (result1.size() == 0) {
+                query = session.createQuery("delete from Person where id=:id");
+                query.setParameter("id", person.getId());
+                query.executeUpdate();
+            } else {
+                session.update(person);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public Person getNull() {
+        try (Session session = this.setupDB()) {
+            session.beginTransaction();
+            Query query = session.createQuery("from Person where id=-5");
+            List result = query.list();
+            for (Person p : (List<Person>) result) {
+                return p;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

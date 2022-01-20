@@ -30,9 +30,6 @@ public class PersonLong extends Person {
 
     public PersonLong() {
         super();
-        this.biographien = new LinkedList<Biographie>();
-        this.objekte = new LinkedList<Objekt>();
-        this.partnerschaften = new LinkedList<Partnerschaft>();
     }
 
     public void setBiographien(List<Biographie> biographien) {
@@ -60,14 +57,17 @@ public class PersonLong extends Person {
     }
 
     public void addBiographie(Biographie biographie) {
+        if (this.biographien == null) this.biographien = new LinkedList<Biographie>();
         this.biographien.add(biographie);
     }
 
     public void addObjekt(Objekt objekt) {
+        if (this.objekte == null) this.objekte= new LinkedList<Objekt>();
         this.objekte.add(objekt);
     }
 
     public void addPartnerschaft(Partnerschaft partnerschaft) {
+        if (this.partnerschaften == null) this.partnerschaften = new LinkedList<Partnerschaft>();
         this.partnerschaften.add(partnerschaft);
     }
 }

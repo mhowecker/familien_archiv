@@ -1,5 +1,6 @@
 package famarch.web.service;
 
+import famarch.web.dbdata.Person;
 import famarch.web.global.Umlaute;
 import famarch.web.webdata.BenutzerData;
 import famarch.web.webdata.PersonDataShort;
@@ -33,5 +34,21 @@ public class ArchivService {
 
     public Umlaute getUmlaute() {
         return new Umlaute();
+    }
+
+    public boolean updatePerson(PersonLong person_neu) {
+        return connector.updatePerson(person_neu);
+    }
+
+    public boolean insertPerson(PersonLong person_neu) {
+        return connector.insertPerson(person_neu);
+    }
+
+    public boolean deletePerson(String id) {
+        return connector.deletePerson(id);
+    }
+
+    public Person getNull() {
+        return connector.getNull();
     }
 }
