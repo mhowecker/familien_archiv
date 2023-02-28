@@ -11,11 +11,11 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Service;
 
-import java.text.NumberFormat;
-import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class ArchivConnector {
 
     private SessionFactory factory;
@@ -43,13 +43,6 @@ public class ArchivConnector {
             session.beginTransaction();
             List result = session.createQuery("from Benutzer").list();
             for (Benutzer b : (List<Benutzer>) result) {
-
-                /*Benutzer user = new Benutzer();
-                user.setName(b.getName());
-                user.setBerechtigung(b.getBerechtigung());
-                user.setPasswort(b.getPasswort());
-                users.addUser(user);*/
-
                 users.addUser(b);
             }
 
@@ -340,19 +333,5 @@ public class ArchivConnector {
             return false;
         }
         return true;
-    }
-
-    public Person getNull() {
-        try (Session session = this.setupDB()) {
-            session.beginTransaction();
-            Query query = session.createQuery("from Person where id=-5");
-            List result = query.list();
-            for (Person p : (List<Person>) result) {
-                return p;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

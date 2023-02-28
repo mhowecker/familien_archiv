@@ -1,7 +1,6 @@
 package famarch.web.webdata;
 
 import famarch.web.dbdata.Benutzer;
-import net.bytebuddy.dynamic.scaffold.MethodGraph;
 
 import java.util.LinkedList;
 import java.util.List;

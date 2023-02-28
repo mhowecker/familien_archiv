@@ -1,19 +1,25 @@
 package famarch.web.service;
 
-import famarch.web.dbdata.Person;
-import famarch.web.global.Umlaute;
 import famarch.web.webdata.BenutzerData;
 import famarch.web.webdata.PersonDataShort;
 import famarch.web.webdata.PersonLong;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+/**
+ * Zwischenklasse zwischen Controller und Connector
+ * leitet Anfragen von Controller an Connector weiter
+ * sickt responses wieder in die andere Richtung
+ */
 
 @Service
 public class ArchivService {
 
+    @Autowired
     private ArchivConnector connector;
 
     public ArchivService() {
-        this.connector = new ArchivConnector();
+
     }
 
     public PersonDataShort getOverview() {
@@ -32,10 +38,6 @@ public class ArchivService {
         return connector.userHandler();
     }
 
-    public Umlaute getUmlaute() {
-        return new Umlaute();
-    }
-
     public boolean updatePerson(PersonLong person_neu) {
         return connector.updatePerson(person_neu);
     }
@@ -46,9 +48,5 @@ public class ArchivService {
 
     public boolean deletePerson(String id) {
         return connector.deletePerson(id);
-    }
-
-    public Person getNull() {
-        return connector.getNull();
     }
 }
